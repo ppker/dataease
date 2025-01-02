@@ -4,9 +4,24 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.dataease</groupId>
-    <artifactId>dataease-server</artifactId>
+    <artifactId>dataease</artifactId>
     <version>${dataease.version}</version>
     <packaging>pom</packaging>
+
+    <properties>
+        <dataease.version>1.18.27</dataease.version>
+        <poi.version>4.1.1</poi.version>
+        <xmlbeans.version>3.1.0</xmlbeans.version>
+        <tomcat.version>9.0.64</tomcat.version>
+    </properties>
+
+    <name>dataease</name>
+
+    <modules>
+        <module>sdk</module>
+        <module>core</module>
+        <module>extensions</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,52 +30,86 @@
         <relativePath/>
     </parent>
 
-    <properties>
-        <dataease.version>1.18.7</dataease.version>
-    </properties>
-
-    <name>dataease</name>
-
-    <modules>
-        <module>frontend</module>
-        <module>mobile</module>
-        <module>backend</module>
-    </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.dataease</groupId>
-                <artifactId>dataease-plugin-interface</artifactId>
-                <version>${dataease.version}</version>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
                 <exclusions>
                     <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>io.dataease</groupId>
-                <artifactId>dataease-plugin-view</artifactId>
-                <version>${dataease.version}</version>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
-                <groupId>io.dataease</groupId>
-                <artifactId>dataease-plugin-datasource</artifactId>
-                <version>${dataease.version}</version>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
+                <version>${poi.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>${xmlbeans.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-
-
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
     </build>
+
+
 
 </project>
